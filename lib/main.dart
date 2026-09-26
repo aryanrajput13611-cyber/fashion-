@@ -19,7 +19,7 @@ home: const AuthScreen(),
 );
 }
 }
-​// ================= GLOBAL MODELS & DATA =================
+​// ================= DATA MODELS =================
 class Product {
 final String id;
 final String name;
@@ -70,14 +70,15 @@ required this.phone,
 this.isSelected = false,
 });
 }
-​List<Product> globalProducts = [
+​// ================= GLOBAL DATA =================
+List<Product> globalProducts = [
 Product(
 id: "1",
 name: "Men's Pullover Hoodie",
 category: "Tops",
 price: 130.00,
 image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&q=80",
-description: "Microsuede Cropped hoodie with elegant, soft finish. Pure cotton material designed for daily premium comfort.",
+description: "Microsuede Cropped hoodie with soft finish. Cotton material designed for comfort.",
 ),
 Product(
 id: "2",
@@ -85,7 +86,7 @@ name: "Classic Beige Sweatshirt",
 category: "Tops",
 price: 95.00,
 image: "https://images.unsplash.com/photo-1578768079052-aa76e520028b?w=500&q=80",
-description: "Relaxed fit round-neck warm pullover designed with high quality fleece lining.",
+description: "Relaxed fit round-neck warm pullover designed with high quality fleece.",
 ),
 Product(
 id: "3",
@@ -93,7 +94,7 @@ name: "White Jordan Sneakers",
 category: "Footwear",
 price: 180.00,
 image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&q=80",
-description: "Clean retro street style sneakers crafted with lightweight cushioning and soft rubber soles.",
+description: "Retro street style sneakers with lightweight cushioning and soft rubber soles.",
 ),
 Product(
 id: "4",
@@ -113,7 +114,7 @@ OrderItem(
 orderId: "ORD#9482",
 title: "Men's Pullover Hoodie",
 price: 130.00,
-date: "26 Sep 2026",
+date: "27 Sep 2026",
 status: "Out for Delivery",
 currentStep: 3,
 ),
@@ -127,7 +128,7 @@ isSelected: true,
 ),
 AddressItem(
 name: "Sunny",
-address: "Wraps on wheels, Near Hotel Indraprastha, Attakulangara",
+address: "Near Hotel Indraprastha, Attakulangara",
 phone: "9310758470",
 isSelected: false,
 ),
@@ -137,7 +138,6 @@ String userProfilePhone = "9310758470";
 String userProfileEmail = "sunankumar77@gmail.com";
 String userProfilePic = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80";
 String selectedPaymentMethod = "UPI (Google Pay / PhonePe)";
-bool notificationEnabled = true;
 ​final List<String> defaultAvatars = [
 "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80",
 "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=300&q=80",
@@ -419,7 +419,7 @@ BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Account'),
 );
 }
 }
-​// ================= HOME SCREEN WITH SEARCH LENS =================
+​// ================= HOME SCREEN =================
 class HomeScreen extends StatefulWidget {
 final VoidCallback onRefresh;
 const HomeScreen({super.key, required this.onRefresh});
@@ -446,7 +446,7 @@ Text("Search Lens - Visual Match", style: TextStyle(fontWeight: FontWeight.bold,
 ],
 ),
 const SizedBox(height: 12),
-const Text("Scan or pick outfit photo to find matching clothes & shoes:", style: TextStyle(color: Colors.grey, fontSize: 13)),
+const Text("Scan or pick outfit photo to find matching clothes:", style: TextStyle(color: Colors.grey, fontSize: 13)),
 const SizedBox(height: 20),
 Row(
 children: [
@@ -466,7 +466,7 @@ Expanded(
 child: OutlinedButton.icon(
 onPressed: () {
 Navigator.pop(ctx);
-ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Gallery Photo picked! 4 matches found.")));
+ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Gallery Photo picked! Matches found.")));
 },
 icon: const Icon(Icons.photo_library, color: Color(0xFFE86B35)),
 label: const Text("Gallery", style: TextStyle(color: Color(0xFFE86B35))),
@@ -507,7 +507,7 @@ Column(
 crossAxisAlignment: CrossAxisAlignment.start,
 children: [
 const Text("FASHION", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 1)),
-Text("Deliver to: userProfileName", style: const TextStyle(color: Colors.grey, fontSize: 11)),
+Text("Deliver to: " + userProfileName, style: const TextStyle(color: Colors.grey, fontSize: 11)),
 ],
 ),
 ],
@@ -577,7 +577,7 @@ ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(prod.ima
 const SizedBox(height: 8),
 Text(prod.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
 const SizedBox(height: 4),
-Text("\${prod.price.toStringAsFixed(2)}", style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold, fontSize: 14)),
+Text("$" + prod.price.toStringAsFixed(2), style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold, fontSize: 14)),
 ],
 ),
 ),
@@ -614,7 +614,7 @@ tileColor: Colors.white,
 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
 leading: ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network(item.image, width: 50, height: 50, fit: BoxFit.cover)),
 title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-subtitle: Text("$${item.price.toStringAsFixed(2)}", style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
+subtitle: Text("$" + item.price.toStringAsFixed(2), style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
 trailing: IconButton(icon: const Icon(Icons.delete_outline, color: Colors.redAccent), onPressed: () => setState(() => globalFavorites.removeAt(index))),
 );
 },
@@ -634,8 +634,8 @@ String selectedSize = "M";
 final List<String> sizes = ["S", "M", "L", "XL", "2XL"];
 ​void _buyNow() {
 final newOrder = OrderItem(
-orderId: "ORD#{DateTime.now().millisecondsSinceEpoch.toString().substring(7)}",
-title: "{widget.product.name} (Size $selectedSize)",
+orderId: "ORD#" + DateTime.now().millisecondsSinceEpoch.toString().substring(7),
+title: widget.product.name + " (Size " + selectedSize + ")",
 price: widget.product.price,
 date: "Today",
 status: "Order Placed",
@@ -660,7 +660,7 @@ ClipRRect(borderRadius: BorderRadius.circular(24), child: Image.network(widget.p
 const SizedBox(height: 20),
 Text(widget.product.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
 const SizedBox(height: 4),
-Text("$${widget.product.price.toStringAsFixed(2)}", style: const TextStyle(fontSize: 20, color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
+Text("$" + widget.product.price.toStringAsFixed(2), style: const TextStyle(fontSize: 20, color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
 const SizedBox(height: 18),
 const Text("Select Size", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
 const SizedBox(height: 10),
@@ -725,7 +725,7 @@ const OrderTrackingScreen({super.key, required this.order});
 ​@override
 Widget build(BuildContext context) {
 return Scaffold(
-appBar: AppBar(title: Text("Track ${order.orderId}"), centerTitle: true, leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context))),
+appBar: AppBar(title: Text("Track " + order.orderId), centerTitle: true, leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context))),
 body: SingleChildScrollView(
 padding: const EdgeInsets.all(20),
 child: Column(
@@ -744,7 +744,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
 children: [
 Text(order.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
 const SizedBox(height: 4),
-Text("Status: ${order.status}", style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 13)),
+Text("Status: " + order.status, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 13)),
 Text("Arriving by tomorrow evening", style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
 ],
 ),
@@ -831,16 +831,16 @@ child: Column(
 crossAxisAlignment: CrossAxisAlignment.start,
 children: [
 Text(item.product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-Text("Size: {item.size}", style: const TextStyle(color: Colors.grey, fontSize: 11)),
+Text("Size: " + item.size, style: const TextStyle(color: Colors.grey, fontSize: 11)),
 const SizedBox(height: 6),
-Text("\${item.product.price.toStringAsFixed(2)}", style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
+Text("$" + item.product.price.toStringAsFixed(2), style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
 ],
 ),
 ),
 Row(
 children: [
 IconButton(icon: const Icon(Icons.remove_circle_outline, size: 20, color: Colors.grey), onPressed: () => setState(() { if (item.quantity > 1) { item.quantity--; } else { globalCart.removeAt(index); } })),
-Text("{item.quantity}", style: const TextStyle(fontWeight: FontWeight.bold)),
+Text(item.quantity.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
 IconButton(icon: const Icon(Icons.add_circle, size: 20, color: Color(0xFFE86B35)), onPressed: () => setState(() => item.quantity++)),
 ],
 ),
@@ -862,7 +862,7 @@ Text(selectedPaymentMethod, style: const TextStyle(fontWeight: FontWeight.bold, 
 const SizedBox(height: 6),
 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
 const Text("Total :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-Text("\${subtotal.toStringAsFixed(2)}", style: const TextStyle(fontSize: 18, color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
+Text("$" + subtotal.toStringAsFixed(2), style: const TextStyle(fontSize: 18, color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
 ]),
 const SizedBox(height: 16),
 SizedBox(
@@ -871,8 +871,8 @@ height: 48,
 child: ElevatedButton(
 onPressed: () {
 final newOrder = OrderItem(
-orderId: "ORD#{DateTime.now().millisecondsSinceEpoch.toString().substring(7)}",
-title: "{globalCart.length} Fashion Items",
+orderId: "ORD#" + DateTime.now().millisecondsSinceEpoch.toString().substring(7),
+title: globalCart.length.toString() + " Fashion Items",
 price: subtotal,
 date: "Today",
 status: "Processing",
@@ -1013,7 +1013,7 @@ onChanged: (val) {
 setPaymentState(() => selectedPaymentMethod = val!);
 setState(() {});
 Navigator.pop(ctx);
-ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment set to: $val")));
+ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment set to: " + val!)));
 },
 ),
 RadioListTile<String>(
@@ -1026,7 +1026,7 @@ onChanged: (val) {
 setPaymentState(() => selectedPaymentMethod = val!);
 setState(() {});
 Navigator.pop(ctx);
-ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment set to: $val")));
+ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment set to: " + val!)));
 },
 ),
 RadioListTile<String>(
@@ -1039,7 +1039,7 @@ onChanged: (val) {
 setPaymentState(() => selectedPaymentMethod = val!);
 setState(() {});
 Navigator.pop(ctx);
-ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment set to: $val")));
+ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Payment set to: " + val!)));
 },
 ),
 ],
@@ -1133,7 +1133,7 @@ decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circul
 child: ListTile(
 leading: Icon(Icons.home, color: addr.isSelected ? const Color(0xFFE86B35) : Colors.grey),
 title: Text(addr.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-subtitle: Text("${addr.address}\nPhone: ${addr.phone}", style: const TextStyle(fontSize: 12)),
+subtitle: Text(addr.address + "\nPhone: " + addr.phone, style: const TextStyle(fontSize: 12)),
 trailing: IconButton(
 icon: Icon(addr.isSelected ? Icons.check_circle : Icons.radio_button_unchecked, color: addr.isSelected ? const Color(0xFFE86B35) : Colors.grey),
 onPressed: () {
@@ -1191,7 +1191,7 @@ Text(ord.date, style: const TextStyle(fontSize: 11, color: Colors.black45)),
 Column(
 crossAxisAlignment: CrossAxisAlignment.end,
 children: [
-Text("$${ord.price.toStringAsFixed(2)}", style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFE86B35))),
+Text("$" + ord.price.toStringAsFixed(2), style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFE86B35))),
 const SizedBox(height: 4),
 Container(
 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -1282,7 +1282,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
 children: [
 Text(userProfileName, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
 Text(userProfileEmail, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-Text("+91 $userProfilePhone", style: const TextStyle(color: Colors.grey, fontSize: 12)),
+Text("+91 " + userProfilePhone, style: const TextStyle(color: Colors.grey, fontSize: 12)),
 ],
 ),
 ),
