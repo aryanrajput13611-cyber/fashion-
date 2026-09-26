@@ -15,7 +15,10 @@ class FashionApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFFBF8F5),
         primaryColor: const Color(0xFFE86B35),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFE86B35)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFE86B35),
+          primary: const Color(0xFFE86B35),
+        ),
         useMaterial3: true,
       ),
       home: const AuthScreen(),
