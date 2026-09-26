@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 ​void main() {
 runApp(const FashionApp());
 }
-​// Global App State
-bool isUserLoggedIn = true; // Auto-login so user isn't stuck on login screen
+​// Auto-login so user directly lands on Home screen
+bool isUserLoggedIn = true;
 ​class FashionApp extends StatelessWidget {
 const FashionApp({super.key});
 ​@override
@@ -18,7 +18,6 @@ scaffoldBackgroundColor: const Color(0xFFF9F6F0),
 primaryColor: const Color(0xFFE86B35),
 colorScheme: ColorScheme.fromSeed(
 seedColor: const Color(0xFFE86B35),
-primary: const Color(0xFFE86B35),
 ),
 useMaterial3: true,
 ),
@@ -26,7 +25,7 @@ home: isUserLoggedIn ? const MainNavigationScreen() : const AuthScreen(),
 );
 }
 }
-​// ================= MODELS =================
+​// ================= DATA MODELS =================
 class Product {
 final String id;
 final String name;
@@ -83,7 +82,7 @@ required this.phone,
 this.isSelected = false,
 });
 }
-​// ================= GLOBAL STORE DATA =================
+​// ================= GLOBAL APP STATE =================
 List<Product> globalProducts = [
 Product(
 id: "1",
@@ -190,6 +189,16 @@ String selectedPaymentMethod = "UPI (Google Pay / PhonePe)";
 "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80",
 "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&q=80",
 "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80",
+"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80",
+];
+​// Gallery Photos for User Selection
+final List<String> gallerySamplePhotos = [
+"https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&q=80",
+"https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&q=80",
+"https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=300&q=80",
+"https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=300&q=80",
+"https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=80",
+"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&q=80",
 ];
 ​// ================= AUTH SCREEN =================
 class AuthScreen extends StatefulWidget {
@@ -285,9 +294,9 @@ child: const Text("Send Reset OTP", style: TextStyle(color: Colors.white, fontWe
 );
 }
 ​void _triggerRealOtpBanner(String target) {
-// Generate actual 6 digit OTP
+// Generate real 6 digit OTP
 final randomOtp = (100000 + Random().nextInt(900000)).toString();
-​// Show instant SMS Notification Banner at the top of the screen
+​// Show SMS Banner on top of screen
 ScaffoldMessenger.of(context).showMaterialBanner(
 MaterialBanner(
 backgroundColor: const Color(0xFF1E293B),
@@ -302,7 +311,7 @@ Text("SMS Notification: Fashion Store", style: TextStyle(color: Colors.white, fo
 ],
 ),
 const SizedBox(height: 4),
-Text("Your 6-Digit OTP for $target is: $randomOtp", style: const TextStyle(color: Colors.greenAccent, fontSize: 15, fontWeight: FontWeight.w900)),
+Text("Your 6-Digit OTP for " + target + " is: " + randomOtp, style: const TextStyle(color: Colors.greenAccent, fontSize: 15, fontWeight: FontWeight.w900)),
 ],
 ),
 actions: [
@@ -313,7 +322,7 @@ child: const Text("DISMISS", style: TextStyle(color: Colors.white70)),
 ],
 ),
 );
-​Future.delayed(const Duration(seconds: 8), () {
+​Future.delayed(const Duration(seconds: 10), () {
 if (mounted) ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
 });
 ​_showOtpDialog(randomOtp);
@@ -672,7 +681,7 @@ padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
 child: Column(
 crossAxisAlignment: CrossAxisAlignment.start,
 children: [
-// Top App Bar with Seller Center shortcut
+// Top App Bar with Seller Shortcut
 Row(
 mainAxisAlignment: MainAxisAlignment.spaceBetween,
 children: [
@@ -699,7 +708,7 @@ Text("Deliver to: " + userProfileName, style: const TextStyle(color: Colors.grey
 ),
 Row(
 children: [
-// Prominent Seller Center Button
+// Sell Button in Header
 InkWell(
 onTap: () async {
 await Navigator.push(context, MaterialPageRoute(builder: (c) => const SellerHubScreen()));
@@ -707,7 +716,7 @@ setState(() {});
 widget.onRefresh();
 },
 child: Container(
-padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
 decoration: BoxDecoration(
 color: const Color(0xFFFFF3ED),
 borderRadius: BorderRadius.circular(20),
@@ -726,7 +735,9 @@ const SizedBox(width: 6),
 IconButton(
 icon: const Icon(Icons.notifications_none_outlined),
 onPressed: () {
-ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("You have 2 exclusive fashion coupons active!")));
+ScaffoldMessenger.of(context).showSnackBar(
+const SnackBar(content: Text("Special Coupon 'SAVE20' active for 20% discount!")),
+);
 },
 ),
 ],
@@ -761,7 +772,7 @@ onPressed: _openInteractiveCameraScanner,
 ),
 ),
 const SizedBox(height: 16),
-​// Animated Promo Banner
+​// Flash Sale Promo Banner
 Container(
 width: double.infinity,
 padding: const EdgeInsets.all(16),
@@ -799,7 +810,7 @@ const Icon(Icons.local_offer_outlined, color: Colors.white, size: 48),
 ),
 ),
 const SizedBox(height: 18),
-​// Horizontal Categories
+​// Horizontal Category Selector
 SizedBox(
 height: 38,
 child: ListView.separated(
@@ -832,16 +843,16 @@ fontSize: 12,
 ),
 ),
 const SizedBox(height: 20),
-​// Products Section Header
+​// Products Header
 Row(
 mainAxisAlignment: MainAxisAlignment.spaceBetween,
 children: [
 const Text("Trending Clothes & Shoes", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-Text("${filtered.length} Items", style: const TextStyle(color: Colors.grey, fontSize: 12)),
+Text(filtered.length.toString() + " Items", style: const TextStyle(color: Colors.grey, fontSize: 12)),
 ],
 ),
 const SizedBox(height: 12),
-​// Products Grid
+​// Product Cards Grid
 filtered.isEmpty
 ? const Center(
 child: Padding(
@@ -921,7 +932,7 @@ children: [
 const Icon(Icons.star, color: Colors.amber, size: 14),
 const SizedBox(width: 4),
 Text(prod.rating.toString(), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-Text(" (${prod.reviewsCount})", style: const TextStyle(fontSize: 10, color: Colors.grey)),
+Text(" (" + prod.reviewsCount.toString() + ")", style: const TextStyle(fontSize: 10, color: Colors.grey)),
 ],
 ),
 const SizedBox(height: 4),
@@ -945,7 +956,7 @@ globalCart.add(CartItem(product: prod, size: "M"));
 widget.onRefresh();
 ScaffoldMessenger.of(context).showSnackBar(
 SnackBar(
-content: Text("Added ${prod.name} to Cart! 🛒"),
+content: Text("Added " + prod.name + " to Cart! 🛒"),
 duration: const Duration(seconds: 1),
 ),
 );
@@ -987,12 +998,12 @@ _animController = AnimationController(
 vsync: this,
 duration: const Duration(seconds: 2),
 )..repeat(reverse: true);
-​// Auto-detect a matching outfit after 2.5 seconds simulation
+​// Auto-detect a matching outfit after 2.5 seconds
 Timer(const Duration(milliseconds: 2500), () {
 if (mounted) {
 setState(() {
 isScanning = false;
-detectedProduct = globalProducts[0]; // Hoodie visual match
+detectedProduct = globalProducts[0]; // Matches hoodie
 });
 }
 });
@@ -1008,7 +1019,7 @@ return Scaffold(
 backgroundColor: Colors.black,
 body: Stack(
 children: [
-// Simulated Camera Live Viewfinder
+// Live Viewfinder Background
 Positioned.fill(
 child: Opacity(
 opacity: 0.65,
@@ -1135,7 +1146,7 @@ Timer(const Duration(seconds: 2), () {
 if (mounted) {
 setState(() {
 isScanning = false;
-detectedProduct = globalProducts[2]; // Jordan sneaker match
+detectedProduct = globalProducts[2]; // Matches Jordan sneaker
 });
 }
 });
@@ -1275,7 +1286,7 @@ isWishlist: false,
 ​globalProducts.insert(0, newProduct);
 Navigator.pop(context);
 ScaffoldMessenger.of(context).showSnackBar(
-SnackBar(content: Text("Success! '${newProduct.name}' is now live on the store.")),
+SnackBar(content: Text("Success! '" + newProduct.name + "' is now live on the store.")),
 );
 }
 ​@override
@@ -1413,7 +1424,7 @@ IconButton(
 icon: const Icon(Icons.share_outlined),
 onPressed: () {
 ScaffoldMessenger.of(context).showSnackBar(
-SnackBar(content: Text("Product link copied: fashionstore.com/item/${widget.product.id}")),
+SnackBar(content: Text("Product link copied: fashionstore.com/item/" + widget.product.id)),
 );
 },
 ),
@@ -1551,7 +1562,7 @@ total += (item.product.price * item.quantity);
 }
 return total;
 }
-​double get finalTotal => max(0, subtotal - discount);
+​double get finalTotal => max(0.0, subtotal - discount);
 ​void _applyCoupon() {
 if (couponCtrl.text.trim().toUpperCase() == "SAVE20") {
 setState(() {
@@ -1559,7 +1570,7 @@ discount = subtotal * 0.20;
 isCouponApplied = true;
 });
 ScaffoldMessenger.of(context).showSnackBar(
-SnackBar(content: Text("Coupon 'SAVE20' applied! You saved $${discount.toStringAsFixed(2)}")),
+SnackBar(content: Text("Coupon 'SAVE20' applied! You saved $ " + discount.toStringAsFixed(2))),
 );
 } else {
 ScaffoldMessenger.of(context).showSnackBar(
@@ -1642,7 +1653,7 @@ onPressed: () => setState(() => item.quantity++),
 },
 ),
 ),
-// Promo Code Input Box
+// Promo Coupon Box
 Padding(
 padding: const EdgeInsets.symmetric(horizontal: 18.0),
 child: Container(
@@ -1851,16 +1862,16 @@ crossAxisAlignment: CrossAxisAlignment.start,
 children: [
 const Text("Edit Profile & Photo", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
 const SizedBox(height: 14),
-const Text("Pick Avatar Photo:", style: TextStyle(fontSize: 12, color: Colors.grey)),
+const Text("Pick from Phone Gallery / Avatars:", style: TextStyle(fontSize: 12, color: Colors.grey)),
 const SizedBox(height: 8),
 SizedBox(
 height: 65,
 child: ListView.separated(
 scrollDirection: Axis.horizontal,
-itemCount: defaultAvatars.length,
+itemCount: gallerySamplePhotos.length,
 separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 10),
 itemBuilder: (BuildContext context, int idx) {
-final pic = defaultAvatars[idx];
+final pic = gallerySamplePhotos[idx];
 final isSelected = userProfilePic == pic;
 return GestureDetector(
 onTap: () {
@@ -1884,7 +1895,7 @@ child: CircleAvatar(radius: 28, backgroundImage: NetworkImage(pic)),
 const SizedBox(height: 12),
 TextField(
 controller: photoUrlCtrl,
-decoration: const InputDecoration(labelText: "Custom Photo Link (Direct URL)", prefixIcon: Icon(Icons.link), border: OutlineInputBorder()),
+decoration: const InputDecoration(labelText: "Or Paste Custom Photo Link (URL)", prefixIcon: Icon(Icons.link), border: OutlineInputBorder()),
 onChanged: (val) {
 if (val.isNotEmpty) setSheetState(() => userProfilePic = val);
 },
