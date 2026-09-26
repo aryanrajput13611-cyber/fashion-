@@ -8,7 +8,7 @@ const FashionApp({super.key});
 Widget build(BuildContext context) {
 return MaterialApp(
 debugShowCheckedModeBanner: false,
-title: 'Fashion',
+title: 'Fashion Store',
 theme: ThemeData(
 scaffoldBackgroundColor: const Color(0xFFFBF8F5),
 primaryColor: const Color(0xFFE86B35),
@@ -19,7 +19,7 @@ home: const AuthScreen(),
 );
 }
 }
-​// ================= DATA MODELS =================
+​// ----------------- DATA MODELS -----------------
 class Product {
 final String id;
 final String name;
@@ -70,13 +70,13 @@ required this.phone,
 this.isSelected = false,
 });
 }
-​// ================= GLOBAL DATA =================
+​// ----------------- GLOBAL APP STATE -----------------
 List<Product> globalProducts = [
 Product(
 id: "1",
 name: "Men's Pullover Hoodie",
 category: "Tops",
-price: 130.00,
+price: 130.0,
 image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&q=80",
 description: "Microsuede Cropped hoodie with soft finish. Cotton material designed for comfort.",
 ),
@@ -84,7 +84,7 @@ Product(
 id: "2",
 name: "Classic Beige Sweatshirt",
 category: "Tops",
-price: 95.00,
+price: 95.0,
 image: "https://images.unsplash.com/photo-1578768079052-aa76e520028b?w=500&q=80",
 description: "Relaxed fit round-neck warm pullover designed with high quality fleece.",
 ),
@@ -92,7 +92,7 @@ Product(
 id: "3",
 name: "White Jordan Sneakers",
 category: "Footwear",
-price: 180.00,
+price: 180.0,
 image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&q=80",
 description: "Retro street style sneakers with lightweight cushioning and soft rubber soles.",
 ),
@@ -100,7 +100,7 @@ Product(
 id: "4",
 name: "Designer UV Sunglasses",
 category: "Accessories",
-price: 45.00,
+price: 45.0,
 image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&q=80",
 description: "Polarized UV400 protective stylish unisex sunglasses.",
 ),
@@ -113,7 +113,7 @@ CartItem(product: globalProducts[2], size: "M", quantity: 1),
 OrderItem(
 orderId: "ORD#9482",
 title: "Men's Pullover Hoodie",
-price: 130.00,
+price: 130.0,
 date: "27 Sep 2026",
 status: "Out for Delivery",
 currentStep: 3,
@@ -122,7 +122,7 @@ currentStep: 3,
 ​List<AddressItem> globalAddresses = [
 AddressItem(
 name: "Sunan Kumar",
-address: "Wraps on wheels, Attakulangara, Main Road, FPSRA87, Thiruvananthapuram",
+address: "Attakulangara, Main Road, FPSRA87, Thiruvananthapuram",
 phone: "9310758470",
 isSelected: true,
 ),
@@ -146,7 +146,7 @@ String selectedPaymentMethod = "UPI (Google Pay / PhonePe)";
 "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80",
 "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80",
 ];
-​// ================= AUTH SCREEN =================
+​// ----------------- AUTH SCREEN -----------------
 class AuthScreen extends StatefulWidget {
 const AuthScreen({super.key});
 ​@override
@@ -162,37 +162,53 @@ final TextEditingController passwordController = TextEditingController(text: "81
 ​void _submitAuth() {
 final input = inputController.text.trim();
 if (input.isEmpty) {
-ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please fill all required fields")));
+ScaffoldMessenger.of(context).showSnackBar(
+const SnackBar(content: Text("Please fill all required fields")),
+);
 return;
 }
 ​if (!isLogin && nameController.text.trim().isNotEmpty) {
 userProfileName = nameController.text.trim();
 }
-if (input.contains('@')) {
+if (input.contains("@")) {
 userProfileEmail = input;
 } else {
 userProfilePhone = input;
 }
-​Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const MainNavigationScreen()));
+​Navigator.pushReplacement(
+context,
+MaterialPageRoute(builder: (c) => const MainNavigationScreen()),
+);
 }
 ​void _openForgotPassword() {
+final resetCtrl = TextEditingController(text: inputController.text);
 showModalBottomSheet(
 context: context,
 isScrollControlled: true,
 backgroundColor: Colors.white,
-shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+shape: const RoundedRectangleBorder(
+borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+),
 builder: (ctx) => Padding(
-padding: EdgeInsets.only(left: 24, right: 24, top: 24, bottom: MediaQuery.of(ctx).viewInsets.bottom + 24),
+padding: EdgeInsets.only(
+left: 24,
+right: 24,
+top: 24,
+bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
+),
 child: Column(
 mainAxisSize: MainAxisSize.min,
 crossAxisAlignment: CrossAxisAlignment.start,
 children: [
 const Text("Forgot Password", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
 const SizedBox(height: 8),
-const Text("Enter Email or Phone number to receive 6-digit OTP:", style: TextStyle(color: Colors.grey, fontSize: 13)),
+const Text(
+"Enter Email or Phone number to receive 6-digit OTP:",
+style: TextStyle(color: Colors.grey, fontSize: 13),
+),
 const SizedBox(height: 14),
 TextField(
-controller: TextEditingController(text: inputController.text),
+controller: resetCtrl,
 decoration: InputDecoration(
 hintText: "Email or Phone Number",
 filled: true,
@@ -209,7 +225,10 @@ onPressed: () {
 Navigator.pop(ctx);
 _showOtpDialog();
 },
-style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE86B35), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+style: ElevatedButton.styleFrom(
+backgroundColor: const Color(0xFFE86B35),
+shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+),
 child: const Text("Send Reset OTP", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
 ),
 )
@@ -237,7 +256,9 @@ TextButton(onPressed: () => Navigator.pop(c), child: const Text("Cancel")),
 ElevatedButton(
 onPressed: () {
 Navigator.pop(c);
-ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("OTP Verified! You can now login.")));
+ScaffoldMessenger.of(context).showSnackBar(
+const SnackBar(content: Text("OTP Verified! You can now login.")),
+);
 },
 style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE86B35)),
 child: const Text("Verify", style: TextStyle(color: Colors.white)),
@@ -262,13 +283,22 @@ height: 65,
 decoration: BoxDecoration(
 color: const Color(0xFFE86B35),
 borderRadius: BorderRadius.circular(20),
-boxShadow: [BoxShadow(color: const Color(0xFFE86B35).withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 5))],
+boxShadow: [
+BoxShadow(
+color: const Color(0xFFE86B35).withOpacity(0.3),
+blurRadius: 15,
+offset: const Offset(0, 5),
+)
+],
 ),
 child: const Icon(Icons.shopping_bag_outlined, color: Colors.white, size: 36),
 ),
 const SizedBox(height: 14),
 const Text("FASHION", style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, letterSpacing: 2)),
-Text(isLogin ? "Welcome back! Login to explore trends" : "Create account to buy & track orders", style: const TextStyle(color: Colors.grey, fontSize: 13)),
+Text(
+isLogin ? "Welcome back! Login to explore trends" : "Create account to buy & track orders",
+style: const TextStyle(color: Colors.grey, fontSize: 13),
+),
 const SizedBox(height: 24),
 Container(
 padding: const EdgeInsets.all(4),
@@ -280,8 +310,19 @@ child: GestureDetector(
 onTap: () => setState(() => isLogin = true),
 child: Container(
 padding: const EdgeInsets.symmetric(vertical: 10),
-decoration: BoxDecoration(color: isLogin ? Colors.white : Colors.transparent, borderRadius: BorderRadius.circular(10)),
-child: Center(child: Text("Login", style: TextStyle(fontWeight: FontWeight.bold, color: isLogin ? const Color(0xFFE86B35) : Colors.black54))),
+decoration: BoxDecoration(
+color: isLogin ? Colors.white : Colors.transparent,
+borderRadius: BorderRadius.circular(10),
+),
+child: Center(
+child: Text(
+"Login",
+style: TextStyle(
+fontWeight: FontWeight.bold,
+color: isLogin ? const Color(0xFFE86B35) : Colors.black54,
+),
+),
+),
 ),
 ),
 ),
@@ -290,8 +331,19 @@ child: GestureDetector(
 onTap: () => setState(() => isLogin = false),
 child: Container(
 padding: const EdgeInsets.symmetric(vertical: 10),
-decoration: BoxDecoration(color: !isLogin ? Colors.white : Colors.transparent, borderRadius: BorderRadius.circular(10)),
-child: Center(child: Text("Sign Up", style: TextStyle(fontWeight: FontWeight.bold, color: !isLogin ? const Color(0xFFE86B35) : Colors.black54))),
+decoration: BoxDecoration(
+color: !isLogin ? Colors.white : Colors.transparent,
+borderRadius: BorderRadius.circular(10),
+),
+child: Center(
+child: Text(
+"Sign Up",
+style: TextStyle(
+fontWeight: FontWeight.bold,
+color: !isLogin ? const Color(0xFFE86B35) : Colors.black54,
+),
+),
+),
 ),
 ),
 ),
@@ -308,8 +360,15 @@ usePhoneAuth = !usePhoneAuth;
 inputController.text = usePhoneAuth ? "9310758470" : "sunankumar77@gmail.com";
 });
 },
-icon: Icon(usePhoneAuth ? Icons.email_outlined : Icons.phone_android, size: 16, color: const Color(0xFFE86B35)),
-label: Text(usePhoneAuth ? "Use Email ID" : "Use Phone Number", style: const TextStyle(color: Color(0xFFE86B35), fontSize: 12, fontWeight: FontWeight.bold)),
+icon: Icon(
+usePhoneAuth ? Icons.email_outlined : Icons.phone_android,
+size: 16,
+color: const Color(0xFFE86B35),
+),
+label: Text(
+usePhoneAuth ? "Use Email ID" : "Use Phone Number",
+style: const TextStyle(color: Color(0xFFE86B35), fontSize: 12, fontWeight: FontWeight.bold),
+),
 ),
 ),
 if (!isLogin) ...[
@@ -355,7 +414,10 @@ border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: 
 if (isLogin)
 Align(
 alignment: Alignment.centerRight,
-child: TextButton(onPressed: _openForgotPassword, child: const Text("Forgot Password?", style: TextStyle(color: Colors.grey, fontSize: 12))),
+child: TextButton(
+onPressed: _openForgotPassword,
+child: const Text("Forgot Password?", style: TextStyle(color: Colors.grey, fontSize: 12)),
+),
 )
 else
 const SizedBox(height: 16),
@@ -364,8 +426,14 @@ width: double.infinity,
 height: 50,
 child: ElevatedButton(
 onPressed: _submitAuth,
-style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE86B35), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
-child: Text(isLogin ? "Log In" : "Create Account", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+style: ElevatedButton.styleFrom(
+backgroundColor: const Color(0xFFE86B35),
+shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+),
+child: Text(
+isLogin ? "Log In" : "Create Account",
+style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+),
 ),
 ),
 ],
@@ -376,7 +444,7 @@ child: Text(isLogin ? "Log In" : "Create Account", style: const TextStyle(color:
 );
 }
 }
-​// ================= MAIN NAVIGATION =================
+​// ----------------- MAIN NAVIGATION -----------------
 class MainNavigationScreen extends StatefulWidget {
 const MainNavigationScreen({super.key});
 ​@override
@@ -398,7 +466,9 @@ bottomNavigationBar: Container(
 decoration: BoxDecoration(
 color: Colors.white,
 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, spreadRadius: 2)],
+boxShadow: [
+BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, spreadRadius: 2)
+],
 ),
 child: BottomNavigationBar(
 currentIndex: _currentIndex,
@@ -409,17 +479,17 @@ selectedItemColor: const Color(0xFFE86B35),
 unselectedItemColor: Colors.grey.shade400,
 type: BottomNavigationBarType.fixed,
 items: const [
-BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: 'Saved'),
-BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined), label: 'Cart'),
-BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Account'),
+BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: "Saved"),
+BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined), label: "Cart"),
+BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Account"),
 ],
 ),
 ),
 );
 }
 }
-​// ================= HOME SCREEN =================
+​// ----------------- HOME SCREEN -----------------
 class HomeScreen extends StatefulWidget {
 final VoidCallback onRefresh;
 const HomeScreen({super.key, required this.onRefresh});
@@ -446,7 +516,10 @@ Text("Search Lens - Visual Match", style: TextStyle(fontWeight: FontWeight.bold,
 ],
 ),
 const SizedBox(height: 12),
-const Text("Scan or pick outfit photo to find matching clothes:", style: TextStyle(color: Colors.grey, fontSize: 13)),
+const Text(
+"Scan or pick outfit photo to find matching clothes:",
+style: TextStyle(color: Colors.grey, fontSize: 13),
+),
 const SizedBox(height: 20),
 Row(
 children: [
@@ -454,11 +527,16 @@ Expanded(
 child: ElevatedButton.icon(
 onPressed: () {
 Navigator.pop(ctx);
-ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Camera Lens opened! Scanning outfits...")));
+ScaffoldMessenger.of(context).showSnackBar(
+const SnackBar(content: Text("Camera Lens opened! Scanning outfits...")),
+);
 },
 icon: const Icon(Icons.camera_alt, color: Colors.white),
 label: const Text("Camera Lens", style: TextStyle(color: Colors.white)),
-style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE86B35), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+style: ElevatedButton.styleFrom(
+backgroundColor: const Color(0xFFE86B35),
+shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+),
 ),
 ),
 const SizedBox(width: 12),
@@ -466,11 +544,16 @@ Expanded(
 child: OutlinedButton.icon(
 onPressed: () {
 Navigator.pop(ctx);
-ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Gallery Photo picked! Matches found.")));
+ScaffoldMessenger.of(context).showSnackBar(
+const SnackBar(content: Text("Gallery Photo picked! Matches found.")),
+);
 },
 icon: const Icon(Icons.photo_library, color: Color(0xFFE86B35)),
 label: const Text("Gallery", style: TextStyle(color: Color(0xFFE86B35))),
-style: OutlinedButton.styleFrom(side: const BorderSide(color: Color(0xFFE86B35)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+style: OutlinedButton.styleFrom(
+side: const BorderSide(color: Color(0xFFE86B35)),
+shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+),
 ),
 ),
 ],
@@ -499,7 +582,10 @@ children: [
 Container(
 width: 44,
 height: 44,
-decoration: BoxDecoration(color: const Color(0xFFE86B35), borderRadius: BorderRadius.circular(14)),
+decoration: BoxDecoration(
+color: const Color(0xFFE86B35),
+borderRadius: BorderRadius.circular(14),
+),
 child: const Icon(Icons.shopping_bag_outlined, color: Colors.white),
 ),
 const SizedBox(width: 12),
@@ -525,10 +611,17 @@ const Icon(Icons.search, color: Colors.grey),
 const SizedBox(width: 8),
 const Expanded(
 child: TextField(
-decoration: InputDecoration(border: InputBorder.none, hintText: "Search shoes, hoodies...", hintStyle: TextStyle(color: Colors.grey, fontSize: 13)),
+decoration: InputDecoration(
+border: InputBorder.none,
+hintText: "Search shoes, hoodies...",
+hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
 ),
 ),
-IconButton(icon: const Icon(Icons.center_focus_strong, color: Color(0xFFE86B35)), onPressed: _openSearchLens),
+),
+IconButton(
+icon: const Icon(Icons.center_focus_strong, color: Color(0xFFE86B35)),
+onPressed: _openSearchLens,
+),
 ],
 ),
 ),
@@ -538,15 +631,27 @@ height: 36,
 child: ListView.separated(
 scrollDirection: Axis.horizontal,
 itemCount: categories.length,
-separatorBuilder: (context, index) => const SizedBox(width: 10),
-itemBuilder: (context, index) {
+separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 10),
+itemBuilder: (BuildContext context, int index) {
 final isSelected = selectedCategoryIndex == index;
 return GestureDetector(
 onTap: () => setState(() => selectedCategoryIndex = index),
 child: Container(
 padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-decoration: BoxDecoration(color: isSelected ? const Color(0xFFE86B35) : Colors.white, borderRadius: BorderRadius.circular(18)),
-child: Center(child: Text(categories[index], style: TextStyle(color: isSelected ? Colors.white : Colors.black87, fontWeight: FontWeight.w600, fontSize: 12))),
+decoration: BoxDecoration(
+color: isSelected ? const Color(0xFFE86B35) : Colors.white,
+borderRadius: BorderRadius.circular(18),
+),
+child: Center(
+child: Text(
+categories[index],
+style: TextStyle(
+color: isSelected ? Colors.white : Colors.black87,
+fontWeight: FontWeight.w600,
+fontSize: 12,
+),
+),
+),
 ),
 );
 },
@@ -559,12 +664,20 @@ GridView.builder(
 shrinkWrap: true,
 physics: const NeverScrollableScrollPhysics(),
 itemCount: filtered.length,
-gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 14, mainAxisSpacing: 14, childAspectRatio: 0.72),
-itemBuilder: (context, idx) {
+gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+crossAxisCount: 2,
+crossAxisSpacing: 14,
+mainAxisSpacing: 14,
+childAspectRatio: 0.72,
+),
+itemBuilder: (BuildContext context, int idx) {
 final prod = filtered[idx];
 return GestureDetector(
 onTap: () async {
-await Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailScreen(product: prod)));
+await Navigator.push(
+context,
+MaterialPageRoute(builder: (context) => ProductDetailScreen(product: prod)),
+);
 setState(() {});
 },
 child: Container(
@@ -573,11 +686,22 @@ decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circul
 child: Column(
 crossAxisAlignment: CrossAxisAlignment.start,
 children: [
-ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(prod.image, height: 130, width: double.infinity, fit: BoxFit.cover)),
+ClipRRect(
+borderRadius: BorderRadius.circular(12),
+child: Image.network(prod.image, height: 130, width: double.infinity, fit: BoxFit.cover),
+),
 const SizedBox(height: 8),
-Text(prod.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+Text(
+prod.name,
+maxLines: 1,
+overflow: TextOverflow.ellipsis,
+style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+),
 const SizedBox(height: 4),
-Text("$" + prod.price.toStringAsFixed(2), style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold, fontSize: 14)),
+Text(
+"$ " + prod.price.toStringAsFixed(2),
+style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold, fontSize: 14),
+),
 ],
 ),
 ),
@@ -590,7 +714,7 @@ Text("$" + prod.price.toStringAsFixed(2), style: const TextStyle(color: Color(0x
 );
 }
 }
-​// ================= SAVED SCREEN =================
+​// ----------------- SAVED SCREEN -----------------
 class SavedScreen extends StatefulWidget {
 const SavedScreen({super.key});
 ​@override
@@ -600,29 +724,40 @@ State<SavedScreen> createState() => _SavedScreenState();
 @override
 Widget build(BuildContext context) {
 return Scaffold(
-appBar: AppBar(title: const Text("Wishlist & Saved", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)), backgroundColor: Colors.transparent, elevation: 0, centerTitle: true),
+appBar: AppBar(
+title: const Text("Wishlist & Saved", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+backgroundColor: Colors.transparent,
+elevation: 0,
+centerTitle: true,
+),
 body: globalFavorites.isEmpty
 ? const Center(child: Text("No saved items yet!", style: TextStyle(color: Colors.grey)))
 : ListView.separated(
 padding: const EdgeInsets.all(16),
 itemCount: globalFavorites.length,
-separatorBuilder: (context, index) => const SizedBox(height: 12),
-itemBuilder: (context, index) {
+separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 12),
+itemBuilder: (BuildContext context, int index) {
 final item = globalFavorites[index];
 return ListTile(
 tileColor: Colors.white,
 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-leading: ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network(item.image, width: 50, height: 50, fit: BoxFit.cover)),
+leading: ClipRRect(
+borderRadius: BorderRadius.circular(8),
+child: Image.network(item.image, width: 50, height: 50, fit: BoxFit.cover),
+),
 title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-subtitle: Text("$" + item.price.toStringAsFixed(2), style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
-trailing: IconButton(icon: const Icon(Icons.delete_outline, color: Colors.redAccent), onPressed: () => setState(() => globalFavorites.removeAt(index))),
+subtitle: Text("$ " + item.price.toStringAsFixed(2), style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
+trailing: IconButton(
+icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+onPressed: () => setState(() => globalFavorites.removeAt(index)),
+),
 );
 },
 ),
 );
 }
 }
-​// ================= DETAILS SCREEN =================
+​// ----------------- DETAILS SCREEN -----------------
 class ProductDetailScreen extends StatefulWidget {
 final Product product;
 const ProductDetailScreen({super.key, required this.product});
@@ -647,7 +782,16 @@ Navigator.push(context, MaterialPageRoute(builder: (c) => OrderTrackingScreen(or
 ​@override
 Widget build(BuildContext context) {
 return Scaffold(
-appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0, leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new, size: 18), onPressed: () => Navigator.pop(context)), centerTitle: true, title: const Text("Details", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+appBar: AppBar(
+backgroundColor: Colors.transparent,
+elevation: 0,
+leading: IconButton(
+icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+onPressed: () => Navigator.pop(context),
+),
+centerTitle: true,
+title: const Text("Details", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+),
 body: Column(
 children: [
 Expanded(
@@ -656,11 +800,14 @@ padding: const EdgeInsets.symmetric(horizontal: 20),
 child: Column(
 crossAxisAlignment: CrossAxisAlignment.start,
 children: [
-ClipRRect(borderRadius: BorderRadius.circular(24), child: Image.network(widget.product.image, height: 280, width: double.infinity, fit: BoxFit.cover)),
+ClipRRect(
+borderRadius: BorderRadius.circular(24),
+child: Image.network(widget.product.image, height: 280, width: double.infinity, fit: BoxFit.cover),
+),
 const SizedBox(height: 20),
 Text(widget.product.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
 const SizedBox(height: 4),
-Text("$" + widget.product.price.toStringAsFixed(2), style: const TextStyle(fontSize: 20, color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
+Text("$ " + widget.product.price.toStringAsFixed(2), style: const TextStyle(fontSize: 20, color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
 const SizedBox(height: 18),
 const Text("Select Size", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
 const SizedBox(height: 10),
@@ -673,8 +820,20 @@ child: Container(
 margin: const EdgeInsets.only(right: 12),
 width: 42,
 height: 42,
-decoration: BoxDecoration(color: isSelected ? const Color(0xFFE86B35) : Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: isSelected ? const Color(0xFFE86B35) : Colors.grey.shade300)),
-child: Center(child: Text(size, style: TextStyle(color: isSelected ? Colors.white : Colors.black87, fontWeight: FontWeight.bold))),
+decoration: BoxDecoration(
+color: isSelected ? const Color(0xFFE86B35) : Colors.white,
+borderRadius: BorderRadius.circular(10),
+border: Border.all(color: isSelected ? const Color(0xFFE86B35) : Colors.grey.shade300),
+),
+child: Center(
+child: Text(
+size,
+style: TextStyle(
+color: isSelected ? Colors.white : Colors.black87,
+fontWeight: FontWeight.bold,
+),
+),
+),
 ),
 );
 }).toList(),
@@ -682,14 +841,20 @@ child: Center(child: Text(size, style: TextStyle(color: isSelected ? Colors.whit
 const SizedBox(height: 20),
 const Text("Description", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
 const SizedBox(height: 6),
-Text(widget.product.description, style: TextStyle(color: Colors.grey.shade700, height: 1.5, fontSize: 13)),
+Text(
+widget.product.description,
+style: TextStyle(color: Colors.grey.shade700, height: 1.5, fontSize: 13),
+),
 ],
 ),
 ),
 ),
 Container(
 padding: const EdgeInsets.all(20),
-decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+decoration: const BoxDecoration(
+color: Colors.white,
+borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+),
 child: Row(
 children: [
 Expanded(
@@ -698,7 +863,11 @@ onPressed: () {
 globalCart.add(CartItem(product: widget.product, size: selectedSize));
 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Added to cart!")));
 },
-style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14), side: const BorderSide(color: Color(0xFFE86B35)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+style: OutlinedButton.styleFrom(
+padding: const EdgeInsets.symmetric(vertical: 14),
+side: const BorderSide(color: Color(0xFFE86B35)),
+shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+),
 child: const Text("Add to Cart", style: TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
 ),
 ),
@@ -706,7 +875,11 @@ const SizedBox(width: 14),
 Expanded(
 child: ElevatedButton(
 onPressed: _buyNow,
-style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE86B35), padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+style: ElevatedButton.styleFrom(
+backgroundColor: const Color(0xFFE86B35),
+padding: const EdgeInsets.symmetric(vertical: 14),
+shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+),
 child: const Text("Buy Now", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
 ),
 ),
@@ -718,14 +891,18 @@ child: const Text("Buy Now", style: TextStyle(color: Colors.white, fontWeight: F
 );
 }
 }
-​// ================= LIVE ORDER TRACKING =================
+​// ----------------- LIVE ORDER TRACKING -----------------
 class OrderTrackingScreen extends StatelessWidget {
 final OrderItem order;
 const OrderTrackingScreen({super.key, required this.order});
 ​@override
 Widget build(BuildContext context) {
 return Scaffold(
-appBar: AppBar(title: Text("Track " + order.orderId), centerTitle: true, leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context))),
+appBar: AppBar(
+title: Text("Track " + order.orderId),
+centerTitle: true,
+leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),
+),
 body: SingleChildScrollView(
 padding: const EdgeInsets.all(20),
 child: Column(
@@ -736,7 +913,11 @@ padding: const EdgeInsets.all(16),
 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
 child: Row(
 children: [
-const CircleAvatar(backgroundColor: Color(0xFFFFF3ED), radius: 28, child: Icon(Icons.local_shipping_outlined, color: Color(0xFFE86B35), size: 30)),
+const CircleAvatar(
+backgroundColor: Color(0xFFFFF3ED),
+radius: 28,
+child: Icon(Icons.local_shipping_outlined, color: Color(0xFFE86B35), size: 30),
+),
 const SizedBox(width: 16),
 Expanded(
 child: Column(
@@ -770,7 +951,11 @@ crossAxisAlignment: CrossAxisAlignment.start,
 children: [
 Column(
 children: [
-CircleAvatar(radius: 12, backgroundColor: done ? const Color(0xFFE86B35) : Colors.grey.shade300, child: Icon(Icons.check, size: 14, color: done ? Colors.white : Colors.grey)),
+CircleAvatar(
+radius: 12,
+backgroundColor: done ? const Color(0xFFE86B35) : Colors.grey.shade300,
+child: Icon(Icons.check, size: 14, color: done ? Colors.white : Colors.grey),
+),
 if (!isLast) Container(width: 2, height: 44, color: done ? const Color(0xFFE86B35) : Colors.grey.shade300),
 ],
 ),
@@ -789,7 +974,7 @@ const SizedBox(height: 14),
 );
 }
 }
-​// ================= CART SCREEN =================
+​// ----------------- CART SCREEN -----------------
 class CartScreen extends StatefulWidget {
 final VoidCallback onRefresh;
 const CartScreen({super.key, required this.onRefresh});
@@ -807,7 +992,12 @@ return total;
 ​@override
 Widget build(BuildContext context) {
 return Scaffold(
-appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0, centerTitle: true, title: const Text("My Cart", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+appBar: AppBar(
+backgroundColor: Colors.transparent,
+elevation: 0,
+centerTitle: true,
+title: const Text("My Cart", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+),
 body: globalCart.isEmpty
 ? const Center(child: Text("Your cart is empty!"))
 : Column(
@@ -816,15 +1006,18 @@ Expanded(
 child: ListView.separated(
 padding: const EdgeInsets.all(20),
 itemCount: globalCart.length,
-separatorBuilder: (context, index) => const SizedBox(height: 16),
-itemBuilder: (context, index) {
+separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 16),
+itemBuilder: (BuildContext context, int index) {
 final item = globalCart[index];
 return Container(
 padding: const EdgeInsets.all(12),
 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
 child: Row(
 children: [
-ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(item.product.image, width: 70, height: 70, fit: BoxFit.cover)),
+ClipRRect(
+borderRadius: BorderRadius.circular(12),
+child: Image.network(item.product.image, width: 70, height: 70, fit: BoxFit.cover),
+),
 const SizedBox(width: 14),
 Expanded(
 child: Column(
@@ -833,15 +1026,27 @@ children: [
 Text(item.product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
 Text("Size: " + item.size, style: const TextStyle(color: Colors.grey, fontSize: 11)),
 const SizedBox(height: 6),
-Text("$" + item.product.price.toStringAsFixed(2), style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
+Text("$ " + item.product.price.toStringAsFixed(2), style: const TextStyle(color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
 ],
 ),
 ),
 Row(
 children: [
-IconButton(icon: const Icon(Icons.remove_circle_outline, size: 20, color: Colors.grey), onPressed: () => setState(() { if (item.quantity > 1) { item.quantity--; } else { globalCart.removeAt(index); } })),
+IconButton(
+icon: const Icon(Icons.remove_circle_outline, size: 20, color: Colors.grey),
+onPressed: () => setState(() {
+if (item.quantity > 1) {
+item.quantity--;
+} else {
+globalCart.removeAt(index);
+}
+}),
+),
 Text(item.quantity.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-IconButton(icon: const Icon(Icons.add_circle, size: 20, color: Color(0xFFE86B35)), onPressed: () => setState(() => item.quantity++)),
+IconButton(
+icon: const Icon(Icons.add_circle, size: 20, color: Color(0xFFE86B35)),
+onPressed: () => setState(() => item.quantity++),
+),
 ],
 ),
 ],
@@ -852,18 +1057,27 @@ IconButton(icon: const Icon(Icons.add_circle, size: 20, color: Color(0xFFE86B35)
 ),
 Container(
 padding: const EdgeInsets.all(20),
-decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+decoration: const BoxDecoration(
+color: Colors.white,
+borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+),
 child: Column(
 children: [
-Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+Row(
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
+children: [
 const Text("Payment Method:", style: TextStyle(color: Colors.grey)),
 Text(selectedPaymentMethod, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFFE86B35))),
-]),
+],
+),
 const SizedBox(height: 6),
-Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+Row(
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
+children: [
 const Text("Total :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-Text("$" + subtotal.toStringAsFixed(2), style: const TextStyle(fontSize: 18, color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
-]),
+Text("$ " + subtotal.toStringAsFixed(2), style: const TextStyle(fontSize: 18, color: Color(0xFFE86B35), fontWeight: FontWeight.bold)),
+],
+),
 const SizedBox(height: 16),
 SizedBox(
 width: double.infinity,
@@ -883,7 +1097,10 @@ setState(() => globalCart.clear());
 widget.onRefresh();
 Navigator.push(context, MaterialPageRoute(builder: (c) => OrderTrackingScreen(order: newOrder)));
 },
-style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE86B35), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+style: ElevatedButton.styleFrom(
+backgroundColor: const Color(0xFFE86B35),
+shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+),
 child: const Text("Pay & Place Order", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
 ),
 ),
@@ -895,7 +1112,7 @@ child: const Text("Pay & Place Order", style: TextStyle(color: Colors.white, fon
 );
 }
 }
-​// ================= PROFILE & SETTINGS =================
+​// ----------------- PROFILE & SETTINGS -----------------
 class ProfileSettingsScreen extends StatefulWidget {
 final VoidCallback onRefresh;
 const ProfileSettingsScreen({super.key, required this.onRefresh});
@@ -915,7 +1132,12 @@ backgroundColor: Colors.white,
 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
 builder: (ctx) => StatefulBuilder(
 builder: (context, setSheetState) => Padding(
-padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
+padding: EdgeInsets.only(
+left: 20,
+right: 20,
+top: 20,
+bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+),
 child: SingleChildScrollView(
 child: Column(
 mainAxisSize: MainAxisSize.min,
@@ -930,8 +1152,8 @@ height: 65,
 child: ListView.separated(
 scrollDirection: Axis.horizontal,
 itemCount: defaultAvatars.length,
-separatorBuilder: (context, index) => const SizedBox(width: 10),
-itemBuilder: (context, idx) {
+separatorBuilder: (BuildContext context, int index) => const SizedBox(width: 10),
+itemBuilder: (BuildContext context, int idx) {
 final pic = defaultAvatars[idx];
 final isSelected = userProfilePic == pic;
 return GestureDetector(
@@ -943,7 +1165,10 @@ photoUrlCtrl.text = pic;
 setState(() {});
 },
 child: Container(
-decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: isSelected ? const Color(0xFFE86B35) : Colors.transparent, width: 3)),
+decoration: BoxDecoration(
+shape: BoxShape.circle,
+border: Border.all(color: isSelected ? const Color(0xFFE86B35) : Colors.transparent, width: 3),
+),
 child: CircleAvatar(radius: 28, backgroundImage: NetworkImage(pic)),
 ),
 );
@@ -1072,7 +1297,12 @@ onTap: () {
 setAddrState(() {
 globalAddresses.insert(
 0,
-AddressItem(name: userProfileName, address: "GPS Auto-detect: Main Road, Attakulangara, Thiruvananthapuram", phone: userProfilePhone, isSelected: true),
+AddressItem(
+name: userProfileName,
+address: "GPS Auto-detect: Main Road, Attakulangara, Thiruvananthapuram",
+phone: userProfilePhone,
+isSelected: true,
+),
 );
 for (int i = 1; i < globalAddresses.length; i++) {
 globalAddresses[i].isSelected = false;
@@ -1107,7 +1337,11 @@ ElevatedButton(
 onPressed: () {
 if (nameCtrl.text.isNotEmpty && addrCtrl.text.isNotEmpty) {
 setAddrState(() {
-globalAddresses.add(AddressItem(name: nameCtrl.text, address: addrCtrl.text, phone: phCtrl.text.isNotEmpty ? phCtrl.text : userProfilePhone));
+globalAddresses.add(AddressItem(
+name: nameCtrl.text,
+address: addrCtrl.text,
+phone: phCtrl.text.isNotEmpty ? phCtrl.text : userProfilePhone,
+));
 });
 Navigator.pop(c);
 }
@@ -1125,17 +1359,24 @@ const SizedBox(height: 16),
 Expanded(
 child: ListView.separated(
 itemCount: globalAddresses.length,
-separatorBuilder: (context, index) => const SizedBox(height: 10),
-itemBuilder: (context, idx) {
+separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10),
+itemBuilder: (BuildContext context, int idx) {
 final addr = globalAddresses[idx];
 return Container(
-decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: addr.isSelected ? const Color(0xFFE86B35) : Colors.transparent, width: 1.5)),
+decoration: BoxDecoration(
+color: Colors.white,
+borderRadius: BorderRadius.circular(14),
+border: Border.all(color: addr.isSelected ? const Color(0xFFE86B35) : Colors.transparent, width: 1.5),
+),
 child: ListTile(
 leading: Icon(Icons.home, color: addr.isSelected ? const Color(0xFFE86B35) : Colors.grey),
 title: Text(addr.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
 subtitle: Text(addr.address + "\nPhone: " + addr.phone, style: const TextStyle(fontSize: 12)),
 trailing: IconButton(
-icon: Icon(addr.isSelected ? Icons.check_circle : Icons.radio_button_unchecked, color: addr.isSelected ? const Color(0xFFE86B35) : Colors.grey),
+icon: Icon(
+addr.isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
+color: addr.isSelected ? const Color(0xFFE86B35) : Colors.grey,
+),
 onPressed: () {
 setAddrState(() {
 for (var a in globalAddresses) {
@@ -1169,8 +1410,8 @@ body: globalOrders.isEmpty
 : ListView.separated(
 padding: const EdgeInsets.all(16),
 itemCount: globalOrders.length,
-separatorBuilder: (context, index) => const SizedBox(height: 12),
-itemBuilder: (context, i) {
+separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 12),
+itemBuilder: (BuildContext context, int i) {
 final ord = globalOrders[i];
 return GestureDetector(
 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => OrderTrackingScreen(order: ord))),
@@ -1191,7 +1432,7 @@ Text(ord.date, style: const TextStyle(fontSize: 11, color: Colors.black45)),
 Column(
 crossAxisAlignment: CrossAxisAlignment.end,
 children: [
-Text("$" + ord.price.toStringAsFixed(2), style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFE86B35))),
+Text("$ " + ord.price.toStringAsFixed(2), style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFE86B35))),
 const SizedBox(height: 4),
 Container(
 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -1271,7 +1512,15 @@ onTap: _editProfileSheet,
 child: Stack(
 children: [
 CircleAvatar(radius: 36, backgroundColor: const Color(0xFFE86B35), backgroundImage: NetworkImage(userProfilePic)),
-Positioned(bottom: 0, right: 0, child: Container(padding: const EdgeInsets.all(4), decoration: const BoxDecoration(color: Color(0xFFE86B35), shape: BoxShape.circle), child: const Icon(Icons.camera_alt, color: Colors.white, size: 14))),
+Positioned(
+bottom: 0,
+right: 0,
+child: Container(
+padding: const EdgeInsets.all(4),
+decoration: const BoxDecoration(color: Color(0xFFE86B35), shape: BoxShape.circle),
+child: const Icon(Icons.camera_alt, color: Colors.white, size: 14),
+),
+),
 ],
 ),
 ),
